@@ -60,3 +60,7 @@ img {
 .mirrored {
 	transform: scaleX(-1);
 }
+
+.absolute {
+	position: absolute;
+}

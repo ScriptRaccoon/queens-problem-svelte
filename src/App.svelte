@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly, fade } from 'svelte/transition'
 	import { get_solutions } from './solutions'
 
 	const SIZES = new Array(17).fill(0).map((_, i) => i + 4)
@@ -126,9 +127,13 @@
 </header>
 
 <main>
+	<!-- MENU -->
 	<menu class="menu">
-		<div class="solution_controls">
-			{#if !editting}
+		{#if !editting}
+			<div
+				class="solution_controls"
+				transition:fly={{ x: -100 }}
+			>
 				<button
 					on:click={left}
 					disabled={!found_all && current_index == 0}
@@ -160,8 +165,8 @@
 						src="./arrow.svg"
 					/>
 				</button>
-			{/if}
-		</div>
+			</div>
+		{/if}
 
 		<div class="size_controls">
 			<label for="size_input">Size</label>
@@ -177,8 +182,10 @@
 		</div>
 	</menu>
 
+	<!-- BOARD -->
 	{#if current_solution}
 		<div class="board" style:--n={n}>
+			<!-- EDIT BUTTON -->
 			<button
 				class="edit-btn"
 				on:click={toggle_edit}
@@ -192,6 +199,7 @@
 				/>
 			</button>
 
+			<!-- CELLS -->
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
 					{#if editting}
@@ -217,26 +225,32 @@
 					{/if}
 				{/each}
 			{/each}
+
+			<!-- QUEENS -->
 			{#if !editting}
-				{#each { length: n } as _, row}
-					{@const col = current_solution[row]}
-					<div
-						class="queen"
-						style:--row={row}
-						style:--col={col}
-					>
-						<img
-							class="queen-img"
-							src="./queen.png"
-							alt="queen in row {row +
-								1} and column {col + 1}"
-						/>
-					</div>
-				{/each}
+				<div class="absolute" transition:fade>
+					{#each { length: n } as _, row}
+						{@const col = current_solution[row]}
+						<div
+							class="queen"
+							style:--row={row}
+							style:--col={col}
+						>
+							<img
+								class="queen-img"
+								src="./queen.png"
+								alt="queen in row {row +
+									1} and column {col + 1}"
+							/>
+						</div>
+					{/each}
+				</div>
 			{/if}
 		</div>
 	{/if}
 </main>
+
+<!-- STYLES -->
 
 <style>
 	.board {
@@ -264,11 +278,11 @@
 	}
 
 	.cell.active {
-		background-color: lime !important;
+		background-color: lime;
 	}
 
 	.cell.problem {
-		background-color: red !important;
+		background-color: red;
 	}
 
 	.queen {
@@ -288,8 +302,7 @@
 	}
 
 	.menu {
-		display: flex;
-		flex-direction: column;
+		display: grid;
 		font-size: 1.5rem;
 		row-gap: 0.5rem;
 		padding-bottom: 2rem;
@@ -310,6 +323,7 @@
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
+		justify-self: end;
 	}
 
 	.size_controls select {
@@ -339,10 +353,11 @@
 
 	@media (min-width: 32rem) {
 		.menu {
-			flex-direction: row;
+			grid-template-columns: 1fr auto;
 			justify-content: space-between;
 			padding-bottom: 1rem;
 		}
+
 		.solution_controls {
 			justify-content: flex-start;
 			gap: 1rem;
