@@ -12,7 +12,7 @@
 	let solutions: number[][] = [current_solution]
 	let found_all = false
 	let editting = false
-	let edit_matrix: boolean[][] = []
+	let edit_matrix: number[][] = []
 	let show_coords = false
 
 	function right(): void {
@@ -72,12 +72,45 @@
 
 	function toggle_cell(row: number, col: number): void {
 		if (!editting) return
-		edit_matrix[row][col] = !edit_matrix[row][col]
+		if (edit_matrix[row][col] > 0) {
+			edit_matrix[row][col] = 0
+		} else {
+			edit_matrix[row][col] = 1
+		}
+		determine_problems()
 	}
 
 	function handle_keydown(e) {
 		if (e.key === 'c') {
 			show_coords = !show_coords
+		}
+	}
+
+	function determine_problems() {
+		// refactor later
+		for (let row1 = 0; row1 < n; row1++) {
+			for (let col1 = 0; col1 < n; col1++) {
+				if (edit_matrix[row1][col1] == 0) continue
+				let problem = false
+				for (let row2 = 0; row2 < n; row2++) {
+					for (let col2 = 0; col2 < n; col2++) {
+						if (
+							edit_matrix[row2][col2] == 0 ||
+							(row1 == row2 && col1 == col2)
+						)
+							continue
+						if (
+							col1 == col2 ||
+							row1 == row2 ||
+							row1 + col1 == row2 + col2 ||
+							row1 - col1 == row2 - col2
+						) {
+							problem = true
+						}
+					}
+				}
+				edit_matrix[row1][col1] = problem ? 2 : 1
+			}
 		}
 	}
 </script>
@@ -154,7 +187,8 @@
 						<button
 							class="cell"
 							class:light={(row + col) % 2 == 0}
-							class:active={edit_matrix[row][col]}
+							class:active={edit_matrix[row][col] == 1}
+							class:problem={edit_matrix[row][col] == 2}
 							on:click={() => toggle_cell(row, col)}
 						>
 							<span
@@ -219,6 +253,10 @@
 
 	.cell.active {
 		background-color: lime !important;
+	}
+
+	.cell.problem {
+		background-color: red !important;
 	}
 
 	.queen {
