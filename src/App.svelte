@@ -63,19 +63,31 @@
 			<button
 				on:click={left}
 				disabled={!found_all && current_index == 0}
+				aria-label="Previous solution"
 			>
-				<img alt="left" src="./arrow.svg" />
+				<img
+					alt="arrow left"
+					aria-hidden="true"
+					src="./arrow.svg"
+				/>
 			</button>
-			<span class="name">
-				Solution {current_index + 1} /
+			<span class="name" aria-live="polite">
+				Solution {current_index + 1}
+				<span aria-hidden="true">/</span>
 				{#if found_all}
+					<span class="vh">of</span>
 					{solutions.length}
 				{:else}
 					?
 				{/if}
 			</span>
-			<button on:click={right}>
-				<img class="mirrored" alt="right" src="./arrow.svg" />
+			<button on:click={right} aria-label="Next solution">
+				<img
+					class="mirrored"
+					alt="arrow left"
+					aria-hidden="true"
+					src="./arrow.svg"
+				/>
 			</button>
 		</div>
 
@@ -104,15 +116,17 @@
 				{/each}
 			{/each}
 			{#each { length: n } as _, row}
+				{@const col = current_solution[row]}
 				<div
 					class="queen"
 					style:--row={row}
-					style:--col={current_solution[row]}
+					style:--col={col}
 				>
 					<img
 						class="queen-img"
 						src="./queen.png"
-						alt="queen"
+						alt="queen in row {row + 1} and column {col +
+							1}"
 					/>
 				</div>
 			{/each}
