@@ -299,7 +299,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
 	}
 
 	.menu button {
@@ -321,7 +320,7 @@
 	.coordinate {
 		opacity: 0;
 		color: black;
-		font-size: calc(0.25 * var(--unit));
+		font-size: min(2rem, calc(0.4 * var(--unit)));
 	}
 
 	.coordinate.visible {
@@ -329,10 +328,9 @@
 	}
 
 	.edit-btn {
-		padding: 0.25rem;
 		position: absolute;
-		bottom: 0;
-		right: -2rem;
+		bottom: -3rem;
+		left: 0;
 	}
 
 	.edit-icon {
@@ -347,6 +345,12 @@
 		}
 		.solution_controls {
 			justify-content: flex-start;
+			gap: 1rem;
+		}
+		.edit-btn {
+			left: unset;
+			bottom: 0;
+			right: -2.5rem;
 		}
 	}
 </style>
