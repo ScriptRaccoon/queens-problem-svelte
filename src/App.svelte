@@ -92,6 +92,7 @@
 			</select>
 		</div>
 	</menu>
+
 	{#if current_solution}
 		<div class="board" style:--n={n}>
 			{#each { length: n } as _, row}
@@ -103,13 +104,17 @@
 				{/each}
 			{/each}
 			{#each { length: n } as _, row}
-				<img
+				<div
 					class="queen"
 					style:--row={row}
 					style:--col={current_solution[row]}
-					src="./queen.png"
-					alt="queen"
-				/>
+				>
+					<img
+						class="queen-img"
+						src="./queen.png"
+						alt="queen"
+					/>
+				</div>
 			{/each}
 		</div>
 	{/if}
@@ -138,10 +143,18 @@
 
 	.queen {
 		position: absolute;
-		width: calc(0.8 * var(--unit));
+		width: var(--unit);
+		height: var(--unit);
 		transition: transform 400ms ease;
-		transform: translateX(calc((var(--col) + 0.1) * var(--unit)))
-			translateY(calc((var(--row) + 0.1) * var(--unit)));
+		transform: translateX(calc(var(--col) * var(--unit)))
+			translateY(calc(var(--row) * var(--unit)));
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.queen-img {
+		width: 90%;
 	}
 
 	.menu {
