@@ -1,22 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { get_solutions, get_partial_solutions } from './solutions'
 
-	type solution = number[]
-
-	let solutions: solution[] = []
+	let n = 8
 	let current_index: number = 0
+	const solutions = get_solutions(n)
 
 	$: current_solution = solutions[current_index] ?? null
-
-	async function get_solutions(): Promise<solution[]> {
-		const res = await fetch('./solutions.json')
-		const data = await res.json()
-		return data
-	}
-
-	onMount(async () => {
-		solutions = await get_solutions()
-	})
 
 	function right(): void {
 		current_index += 1
@@ -34,7 +23,7 @@
 </script>
 
 <header class="vh">
-	<h1>Solutions of the 8 queens problem</h1>
+	<h1>Solutions of the {n} queens problem</h1>
 </header>
 
 <main>
@@ -42,22 +31,24 @@
 		<button on:click={left}>
 			<img alt="left" src="./arrow.svg" />
 		</button>
-		<span class="name">Solution {current_index + 1}</span>
+		<span class="name"
+			>Solution {current_index + 1} / {solutions.length}</span
+		>
 		<button on:click={right}>
 			<img class="arrow-right" alt="right" src="./arrow.svg" />
 		</button>
 	</menu>
 	{#if current_solution}
-		<div class="board">
-			{#each { length: 8 } as _, row}
-				{#each { length: 8 } as _, col}
+		<div class="board" style:--n={n}>
+			{#each { length: n } as _, row}
+				{#each { length: n } as _, col}
 					<div
 						class="cell"
 						class:light={(row + col) % 2 == 0}
 					/>
 				{/each}
 			{/each}
-			{#each { length: 8 } as _, row}
+			{#each { length: n } as _, row}
 				<img
 					class="queen"
 					style:--row={row}
@@ -73,11 +64,11 @@
 <style>
 	.board {
 		--size: 80vmin;
-		--unit: calc(var(--size) / 8);
+		--unit: calc(var(--size) / var(--n));
 		width: var(--size);
 		height: var(--size);
 		display: grid;
-		grid-template: repeat(8, 1fr) / repeat(8, 1fr);
+		grid-template: repeat(var(--n), 1fr) / repeat(var(--n), 1fr);
 		gap: 2px;
 		overflow: hidden;
 		border-radius: 0.5rem;
