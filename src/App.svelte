@@ -11,6 +11,8 @@
 	let current_solution: number[] = solution_generator.next().value
 	let solutions: number[][] = [current_solution]
 	let found_all = false
+	let editting = false
+	let edit_matrix: boolean[][] = []
 
 	function right(): void {
 		if (current_index < solutions.length - 1) {
@@ -46,6 +48,30 @@
 		solution_generator = get_solutions(n)
 		current_solution = solution_generator.next().value
 		solutions = [current_solution]
+		clear_matrix()
+	}
+
+	function toggle_edit(): void {
+		editting = !editting
+		if (editting) {
+			clear_matrix()
+		}
+	}
+
+	function clear_matrix(): void {
+		edit_matrix = []
+		for (let i = 0; i < n; i++) {
+			const false_list = []
+			for (let j = 0; j < n; j++) {
+				false_list.push(false)
+			}
+			edit_matrix.push(false_list)
+		}
+	}
+
+	function toggle_cell(row: number, col: number): void {
+		if (!editting) return
+		edit_matrix[row][col] = !edit_matrix[row][col]
 	}
 </script>
 
@@ -60,35 +86,41 @@
 <main>
 	<menu class="menu">
 		<div class="solution_controls">
-			<button
-				on:click={left}
-				disabled={!found_all && current_index == 0}
-				aria-label="Previous solution"
-			>
-				<img
-					alt="arrow left"
-					aria-hidden="true"
-					src="./arrow.svg"
-				/>
-			</button>
-			<span class="name" aria-live="polite">
-				Solution {current_index + 1}
-				<span aria-hidden="true">/</span>
-				{#if found_all}
-					<span class="vh">of</span>
-					{solutions.length}
-				{:else}
-					?
-				{/if}
-			</span>
-			<button on:click={right} aria-label="Next solution">
-				<img
-					class="mirrored"
-					alt="arrow left"
-					aria-hidden="true"
-					src="./arrow.svg"
-				/>
-			</button>
+			{#if !editting}
+				<button
+					on:click={left}
+					disabled={!found_all && current_index == 0}
+					aria-label="Previous solution"
+				>
+					<img
+						alt="arrow left"
+						aria-hidden="true"
+						src="./arrow.svg"
+					/>
+				</button>
+
+				<span class="name" aria-live="polite">
+					Solution {current_index + 1}
+					<span aria-hidden="true">/</span>
+					{#if found_all}
+						<span class="vh">of</span>
+						{solutions.length}
+					{:else}
+						?
+					{/if}
+				</span>
+
+				<button on:click={right} aria-label="Next solution">
+					<img
+						class="mirrored"
+						alt="arrow left"
+						aria-hidden="true"
+						src="./arrow.svg"
+					/>
+				</button>
+			{/if}
+
+			<button on:click={toggle_edit}>Edit</button>
 		</div>
 
 		<div class="size_controls">
@@ -109,27 +141,38 @@
 		<div class="board" style:--n={n}>
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
-					<div
-						class="cell"
-						class:light={(row + col) % 2 == 0}
-					/>
+					{#if editting}
+						<button
+							class="cell"
+							class:light={(row + col) % 2 == 0}
+							class:active={edit_matrix[row][col]}
+							on:click={() => toggle_cell(row, col)}
+						/>
+					{:else}
+						<div
+							class="cell"
+							class:light={(row + col) % 2 == 0}
+						/>
+					{/if}
 				{/each}
 			{/each}
-			{#each { length: n } as _, row}
-				{@const col = current_solution[row]}
-				<div
-					class="queen"
-					style:--row={row}
-					style:--col={col}
-				>
-					<img
-						class="queen-img"
-						src="./queen.png"
-						alt="queen in row {row + 1} and column {col +
-							1}"
-					/>
-				</div>
-			{/each}
+			{#if !editting}
+				{#each { length: n } as _, row}
+					{@const col = current_solution[row]}
+					<div
+						class="queen"
+						style:--row={row}
+						style:--col={col}
+					>
+						<img
+							class="queen-img"
+							src="./queen.png"
+							alt="queen in row {row +
+								1} and column {col + 1}"
+						/>
+					</div>
+				{/each}
+			{/if}
 		</div>
 	{/if}
 </main>
@@ -153,6 +196,10 @@
 
 	.cell.light {
 		background-color: #779;
+	}
+
+	.cell.active {
+		background-color: lime !important;
 	}
 
 	.queen {
