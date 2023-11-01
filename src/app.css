@@ -25,6 +25,13 @@ button {
 	outline: none;
 }
 
+select,
+option {
+	font-family: inherit;
+	font-size: inherit;
+	outline: none;
+}
+
 .vh {
 	position: absolute;
 	left: -100vw;
@@ -35,4 +42,8 @@ button {
 
 img {
 	max-width: 100%;
+}
+
+.mirrored {
+	transform: scaleX(-1);
 }

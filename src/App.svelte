@@ -1,9 +1,13 @@
 <script lang="ts">
-	import { get_solutions, get_partial_solutions } from './solutions'
+	import { get_solutions } from './solutions'
 
+	const SIZES = new Array(17).fill(0).map((_, i) => i + 4)
 	let n = 8
+
+	$: title = `Solutions of the ${n} queens problem`
+
 	let current_index: number = 0
-	const solutions = get_solutions(n)
+	$: solutions = get_solutions(n)
 
 	$: current_solution = solutions[current_index] ?? null
 
@@ -20,23 +24,46 @@
 			current_index = solutions.length - 1
 		}
 	}
+
+	function change_size() {
+		current_index = 0
+	}
 </script>
 
+<svelte:head>
+	<title>{title}</title>
+</svelte:head>
+
 <header class="vh">
-	<h1>Solutions of the {n} queens problem</h1>
+	<h1>{title}</h1>
 </header>
 
 <main>
 	<menu class="menu">
-		<button on:click={left}>
-			<img alt="left" src="./arrow.svg" />
-		</button>
-		<span class="name"
-			>Solution {current_index + 1} / {solutions.length}</span
-		>
-		<button on:click={right}>
-			<img class="arrow-right" alt="right" src="./arrow.svg" />
-		</button>
+		<div class="solution_controls">
+			<button on:click={left}>
+				<img alt="left" src="./arrow.svg" />
+			</button>
+			<span class="name">
+				Solution {current_index + 1} / {solutions.length}
+			</span>
+			<button on:click={right}>
+				<img class="mirrored" alt="right" src="./arrow.svg" />
+			</button>
+		</div>
+
+		<div class="size_controls">
+			<label for="size_input">Size</label>
+			<select
+				id="size_input"
+				bind:value={n}
+				on:change={change_size}
+			>
+				{#each SIZES as size}
+					<option value={size}>{size}</option>
+				{/each}
+			</select>
+		</div>
 	</menu>
 	{#if current_solution}
 		<div class="board" style:--n={n}>
@@ -92,11 +119,17 @@
 
 	.menu {
 		display: flex;
-		justify-content: center;
-		align-items: center;
+		flex-direction: column;
 		font-size: 1.5rem;
-		padding-bottom: 1rem;
-		gap: 1.5rem;
+		row-gap: 0.5rem;
+		padding-bottom: 2rem;
+	}
+
+	.solution_controls {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
 	}
 
 	.menu button {
@@ -104,7 +137,25 @@
 		display: flex;
 	}
 
-	.menu .arrow-right {
-		transform: scaleX(-1);
+	.size_controls {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.size_controls select {
+		text-align: center;
+		font-size: 1.25rem;
+	}
+
+	@media (min-width: 32rem) {
+		.menu {
+			flex-direction: row;
+			justify-content: space-between;
+			padding-bottom: 1rem;
+		}
+		.solution_controls {
+			justify-content: flex-start;
+		}
 	}
 </style>
