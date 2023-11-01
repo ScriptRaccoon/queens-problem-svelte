@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition'
-	import { get_solutions } from './solutions'
+	import { get_solutions, type solution } from './solutions'
 
 	const SIZES = new Array(17).fill(0).map((_, i) => i + 4)
 	let n = 8
@@ -9,10 +9,10 @@
 
 	let current_index: number = 0
 	let solution_generator = get_solutions(n)
-	let current_solution: number[] = solution_generator.next().value
-	let solutions: number[][] = [current_solution]
+	let current_solution: solution = solution_generator.next().value
+	let solutions: solution[] = [current_solution]
 	let found_all = false
-	let editting = false
+	let editing = false
 	let edit_matrix: number[][] = []
 	let show_coords = false
 
@@ -54,8 +54,8 @@
 	}
 
 	function toggle_edit(): void {
-		editting = !editting
-		if (editting) {
+		editing = !editing
+		if (editing) {
 			clear_matrix()
 		}
 	}
@@ -72,7 +72,7 @@
 	}
 
 	function toggle_cell(row: number, col: number): void {
-		if (!editting) return
+		if (!editing) return
 		if (edit_matrix[row][col] > 0) {
 			edit_matrix[row][col] = 0
 		} else {
@@ -81,7 +81,7 @@
 		determine_problems()
 	}
 
-	function handle_keydown(e) {
+	function handle_keydown(e: KeyboardEvent): void {
 		if (e.key === 'c') {
 			show_coords = !show_coords
 		}
@@ -129,7 +129,7 @@
 <main>
 	<!-- MENU -->
 	<menu class="menu">
-		{#if !editting}
+		{#if !editing}
 			<div
 				class="solution_controls"
 				transition:fly={{ x: -100 }}
@@ -202,7 +202,7 @@
 			<!-- CELLS -->
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
-					{#if editting}
+					{#if editing}
 						{@const entry = edit_matrix?.[row]?.[col]}
 						<button
 							class="cell"
@@ -227,7 +227,7 @@
 			{/each}
 
 			<!-- QUEENS -->
-			{#if !editting}
+			{#if !editing}
 				<div class="absolute" transition:fade>
 					{#each { length: n } as _, row}
 						{@const col = current_solution[row]}

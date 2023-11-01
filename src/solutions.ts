@@ -1,10 +1,12 @@
+export type solution = number[]
+
 export function* get_partial_solutions(
 	n: number,
 	row: number,
 	columns: number[],
 	sums: number[],
 	diffs: number[]
-): IterableIterator<number[]> {
+): IterableIterator<solution> {
 	if (row < n) {
 		for (let col = 0; col < n; col++) {
 			const invalid =
@@ -28,6 +30,6 @@ export function* get_partial_solutions(
 	}
 }
 
-export function get_solutions(n: number): IterableIterator<number[]> {
+export function get_solutions(n: number): IterableIterator<solution> {
 	return get_partial_solutions(n, 0, [], [], [])
 }
