@@ -62,11 +62,11 @@
 	function clear_matrix(): void {
 		edit_matrix = []
 		for (let i = 0; i < n; i++) {
-			const false_list = []
+			const some_list = []
 			for (let j = 0; j < n; j++) {
-				false_list.push(false)
+				some_list.push(0)
 			}
-			edit_matrix.push(false_list)
+			edit_matrix.push(some_list)
 		}
 	}
 
@@ -195,11 +195,12 @@
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
 					{#if editting}
+						{@const entry = edit_matrix?.[row]?.[col]}
 						<button
 							class="cell"
 							class:light={(row + col) % 2 == 0}
-							class:active={edit_matrix[row][col] == 1}
-							class:problem={edit_matrix[row][col] == 2}
+							class:active={entry == 1}
+							class:problem={entry == 2}
 							on:click={() => toggle_cell(row, col)}
 						>
 							<span
