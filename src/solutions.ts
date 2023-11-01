@@ -28,6 +28,6 @@ export function* get_partial_solutions(
 	}
 }
 
-export function get_solutions(n: number): number[][] {
-	return [...get_partial_solutions(n, 0, [], [], [])]
+export function get_solutions(n: number): IterableIterator<number[]> {
+	return get_partial_solutions(n, 0, [], [], [])
 }

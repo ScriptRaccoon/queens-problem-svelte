@@ -7,26 +7,45 @@
 	$: title = `Solutions of the ${n} queens problem`
 
 	let current_index: number = 0
-	$: solutions = get_solutions(n)
-
-	$: current_solution = solutions[current_index] ?? null
+	let solution_generator = get_solutions(n)
+	let current_solution: number[] = solution_generator.next().value
+	let solutions: number[][] = [current_solution]
+	let found_all = false
 
 	function right(): void {
-		current_index += 1
-		if (current_index >= solutions.length) {
-			current_index = 0
+		if (current_index < solutions.length - 1) {
+			current_index += 1
+			current_solution = solutions[current_index]
+		} else {
+			const next_solution = solution_generator.next().value
+			if (next_solution) {
+				current_solution = next_solution
+				solutions.push(current_solution)
+				current_index += 1
+			} else {
+				found_all = true
+				current_index = 0
+				current_solution = solutions[0]
+			}
 		}
 	}
 
 	function left(): void {
-		current_index -= 1
-		if (current_index < 0) {
+		if (current_index > 0) {
+			current_index -= 1
+			current_solution = solutions[current_index]
+		} else if (found_all) {
 			current_index = solutions.length - 1
+			current_solution = solutions[current_index]
 		}
 	}
 
-	function change_size() {
+	function change_size(): void {
+		found_all = false
 		current_index = 0
+		solution_generator = get_solutions(n)
+		current_solution = solution_generator.next().value
+		solutions = [current_solution]
 	}
 </script>
 
@@ -41,11 +60,19 @@
 <main>
 	<menu class="menu">
 		<div class="solution_controls">
-			<button on:click={left}>
+			<button
+				on:click={left}
+				disabled={!found_all && current_index == 0}
+			>
 				<img alt="left" src="./arrow.svg" />
 			</button>
 			<span class="name">
-				Solution {current_index + 1} / {solutions.length}
+				Solution {current_index + 1} /
+				{#if found_all}
+					{solutions.length}
+				{:else}
+					?
+				{/if}
 			</span>
 			<button on:click={right}>
 				<img class="mirrored" alt="right" src="./arrow.svg" />
