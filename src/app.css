@@ -22,8 +22,11 @@ button {
 	border: none;
 	background: none;
 	cursor: pointer;
-	outline: none;
 	transition: opacity 200ms linear;
+}
+
+button:focus-visible {
+	outline: 1px solid white;
 }
 
 button[disabled] {
@@ -35,7 +38,11 @@ select,
 option {
 	font-family: inherit;
 	font-size: inherit;
-	outline: none;
+}
+
+select:focus-visible {
+	outline: 1px solid white;
+	outline-offset: 0.25rem;
 }
 
 .vh {
