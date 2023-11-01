@@ -161,8 +161,6 @@
 					/>
 				</button>
 			{/if}
-
-			<button on:click={toggle_edit}>Edit</button>
 		</div>
 
 		<div class="size_controls">
@@ -181,6 +179,19 @@
 
 	{#if current_solution}
 		<div class="board" style:--n={n}>
+			<button
+				class="edit-btn"
+				on:click={toggle_edit}
+				aria-label="Toggle edit mode"
+			>
+				<img
+					class="edit-icon"
+					src="./edit.svg"
+					alt="edit"
+					aria-hidden="true"
+				/>
+			</button>
+
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
 					{#if editting}
@@ -235,8 +246,8 @@
 		display: grid;
 		grid-template: repeat(var(--n), 1fr) / repeat(var(--n), 1fr);
 		gap: 2px;
-		overflow: hidden;
 		border-radius: 0.5rem;
+		position: relative;
 	}
 
 	.board * {
@@ -314,6 +325,17 @@
 
 	.coordinate.visible {
 		opacity: 1;
+	}
+
+	.edit-btn {
+		padding: 0.25rem;
+		position: absolute;
+		bottom: 0;
+		right: -2rem;
+	}
+
+	.edit-icon {
+		width: 1.25rem;
 	}
 
 	@media (min-width: 32rem) {
