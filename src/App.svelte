@@ -13,6 +13,7 @@
 	let found_all = false
 	let editting = false
 	let edit_matrix: boolean[][] = []
+	let show_coords = false
 
 	function right(): void {
 		if (current_index < solutions.length - 1) {
@@ -73,11 +74,19 @@
 		if (!editting) return
 		edit_matrix[row][col] = !edit_matrix[row][col]
 	}
+
+	function handle_keydown(e) {
+		if (e.key === 'c') {
+			show_coords = !show_coords
+		}
+	}
 </script>
 
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
+
+<svelte:window on:keydown={handle_keydown} />
 
 <header class="vh">
 	<h1>{title}</h1>
@@ -147,7 +156,13 @@
 							class:light={(row + col) % 2 == 0}
 							class:active={edit_matrix[row][col]}
 							on:click={() => toggle_cell(row, col)}
-						/>
+						>
+							<span
+								class="coordinate"
+								class:visible={show_coords}
+								>({row},{col})</span
+							>
+						</button>
 					{:else}
 						<div
 							class="cell"
@@ -190,6 +205,10 @@
 		border-radius: 0.5rem;
 	}
 
+	.board * {
+		transition: all 400ms ease;
+	}
+
 	.cell {
 		background-color: #445;
 	}
@@ -206,7 +225,7 @@
 		position: absolute;
 		width: var(--unit);
 		height: var(--unit);
-		transition: transform 400ms ease;
+
 		transform: translateX(calc(var(--col) * var(--unit)))
 			translateY(calc(var(--row) * var(--unit)));
 		display: flex;
@@ -247,6 +266,16 @@
 	.size_controls select {
 		text-align: center;
 		font-size: 1.25rem;
+	}
+
+	.coordinate {
+		opacity: 0;
+		color: black;
+		font-size: calc(0.25 * var(--unit));
+	}
+
+	.coordinate.visible {
+		opacity: 1;
 	}
 
 	@media (min-width: 32rem) {
