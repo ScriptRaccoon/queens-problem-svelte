@@ -1,55 +1,57 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition'
 	import { get_solutions, type solution } from './solutions'
+	import { DoublyLinkedList } from './DoublyLinkedList'
 
 	const SIZES = new Array(17).fill(0).map((_, i) => i + 4)
 	let n = 8
 
 	$: title = `Solutions of the ${n} queens problem`
 
-	let current_index: number = 0
 	let solution_generator = get_solutions(n)
-	let current_solution: solution = solution_generator.next().value
-	let solutions: solution[] = [current_solution]
+	let solution_list = new DoublyLinkedList<solution>()
+	solution_list.add(solution_generator.next().value)
+	let current_solution = solution_list.first
+	let current_index: number = 0
+	let total_number: number = 0
+
 	let found_all = false
 	let editing = false
 	let edit_matrix: number[][] = []
 	let show_coords = false
 
-	function right(): void {
-		if (current_index < solutions.length - 1) {
+	function show_next_solution(): void {
+		if (current_solution.next) {
+			current_solution = current_solution.next
 			current_index += 1
-			current_solution = solutions[current_index]
-		} else {
-			const next_solution = solution_generator.next().value
-			if (next_solution) {
-				current_solution = next_solution
-				solutions.push(current_solution)
-				current_index += 1
-			} else {
-				found_all = true
-				current_index = 0
-				current_solution = solutions[0]
-			}
+			return
 		}
+
+		const next_solution = solution_generator.next().value
+		if (next_solution) {
+			current_solution = solution_list.add(next_solution)
+			current_index += 1
+		} else if (!found_all) {
+			found_all = true
+		}
+		total_number = current_index + 1
 	}
 
-	function left(): void {
-		if (current_index > 0) {
+	function show_previous_solution(): void {
+		const prev_solution = current_solution.prev
+		if (prev_solution) {
+			current_solution = prev_solution
 			current_index -= 1
-			current_solution = solutions[current_index]
-		} else if (found_all) {
-			current_index = solutions.length - 1
-			current_solution = solutions[current_index]
 		}
 	}
 
 	function change_size(): void {
 		found_all = false
-		current_index = 0
 		solution_generator = get_solutions(n)
-		current_solution = solution_generator.next().value
-		solutions = [current_solution]
+		solution_list = new DoublyLinkedList()
+		solution_list.add(solution_generator.next().value)
+		current_solution = solution_list.first
+		current_index = 0
 		clear_matrix()
 	}
 
@@ -131,8 +133,8 @@
 				transition:fly={{ x: -100 }}
 			>
 				<button
-					on:click={left}
-					disabled={!found_all && current_index == 0}
+					disabled={current_index == 0}
+					on:click={show_previous_solution}
 					aria-label="Previous solution"
 				>
 					<img
@@ -147,13 +149,18 @@
 					<span aria-hidden="true">/</span>
 					{#if found_all}
 						<span class="vh">of</span>
-						{solutions.length}
+						{total_number}
 					{:else}
 						?
 					{/if}
 				</span>
 
-				<button on:click={right} aria-label="Next solution">
+				<button
+					disabled={found_all &&
+						current_index == total_number - 1}
+					on:click={show_next_solution}
+					aria-label="Next solution"
+				>
 					<img
 						class="mirrored"
 						alt="arrow left"
@@ -239,7 +246,7 @@
 			{#if !editing}
 				<div class="absolute" transition:fade>
 					{#each { length: n } as _, row}
-						{@const col = current_solution[row]}
+						{@const col = current_solution.data[row]}
 						<div
 							class="queen"
 							style:--row={row}
