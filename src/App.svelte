@@ -81,10 +81,8 @@
 		determine_problems()
 	}
 
-	function handle_keydown(e: KeyboardEvent): void {
-		if (e.key === 'c') {
-			show_coords = !show_coords
-		}
+	function toggle_coordinates(): void {
+		show_coords = !show_coords
 	}
 
 	function determine_problems() {
@@ -119,8 +117,6 @@
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
-
-<svelte:window on:keydown={handle_keydown} />
 
 <header class="vh">
 	<h1>{title}</h1>
@@ -174,9 +170,22 @@
 				aria-label="Toggle edit mode"
 			>
 				<img
-					class="edit-icon"
+					class="icon"
 					src="./edit.svg"
 					alt="edit"
+					aria-hidden="true"
+				/>
+			</button>
+
+			<button
+				aria-label="toggle coordinates"
+				on:click={toggle_coordinates}
+				disabled={!editing}
+			>
+				<img
+					src="./coordinate.svg"
+					alt="coordinate"
+					class="icon"
 					aria-hidden="true"
 				/>
 			</button>
@@ -350,7 +359,7 @@
 		opacity: 1;
 	}
 
-	.edit-icon {
+	.icon {
 		width: 1.25rem;
 	}
 

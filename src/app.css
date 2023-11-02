@@ -36,6 +36,7 @@ button {
 
 button:focus-visible {
 	outline: 1px solid var(--font-color);
+	z-index: 10;
 }
 
 button[disabled] {
@@ -52,6 +53,7 @@ option {
 select:focus-visible {
 	outline: 1px solid var(--font-color);
 	outline-offset: 0.25rem;
+	z-index: 10;
 }
 
 .vh {
