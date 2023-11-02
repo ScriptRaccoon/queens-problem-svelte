@@ -168,26 +168,8 @@
 			</div>
 		{/if}
 
-		<div class="size_controls">
-			<label for="size_input">Size</label>
-			<select
-				id="size_input"
-				bind:value={n}
-				on:change={change_size}
-			>
-				{#each SIZES as size}
-					<option value={size}>{size}</option>
-				{/each}
-			</select>
-		</div>
-	</menu>
-
-	<!-- BOARD -->
-	{#if current_solution}
-		<div class="board" style:--n={n}>
-			<!-- EDIT BUTTON -->
+		<div class="secondary_controls">
 			<button
-				class="edit-btn"
 				on:click={toggle_edit}
 				aria-label="Toggle edit mode"
 			>
@@ -199,6 +181,24 @@
 				/>
 			</button>
 
+			<div class="size_controls">
+				<label for="size_input">Size</label>
+				<select
+					id="size_input"
+					bind:value={n}
+					on:change={change_size}
+				>
+					{#each SIZES as size}
+						<option value={size}>{size}</option>
+					{/each}
+				</select>
+			</div>
+		</div>
+	</menu>
+
+	<!-- BOARD -->
+	{#if current_solution}
+		<div class="board" style:--n={n}>
 			<!-- CELLS -->
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
@@ -254,7 +254,7 @@
 
 <style>
 	.board {
-		--size: 80vmin;
+		--size: min(45rem, 90vmin);
 		--unit: calc(var(--size) / var(--n));
 		width: var(--size);
 		height: var(--size);
@@ -263,6 +263,7 @@
 		gap: 2px;
 		border-radius: 0.5rem;
 		position: relative;
+		margin-top: 0.5rem;
 	}
 
 	.board * {
@@ -289,7 +290,6 @@
 		position: absolute;
 		width: var(--unit);
 		height: var(--unit);
-
 		transform: translateX(calc(var(--col) * var(--unit)))
 			translateY(calc(var(--row) * var(--unit)));
 		display: flex;
@@ -302,16 +302,15 @@
 	}
 
 	.menu {
-		display: grid;
 		font-size: 1.5rem;
-		row-gap: 0.5rem;
-		padding-bottom: 2rem;
 	}
 
 	.solution_controls {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		flex-wrap: wrap;
+		padding-bottom: 1rem;
 	}
 
 	.menu button {
@@ -319,16 +318,22 @@
 		display: flex;
 	}
 
+	.secondary_controls {
+		display: flex;
+		justify-content: space-between;
+	}
+
 	.size_controls {
 		display: flex;
 		gap: 0.5rem;
+		font-size: 1rem;
 		align-items: center;
 		justify-self: end;
 	}
 
 	.size_controls select {
 		text-align: center;
-		font-size: 1.25rem;
+		font-size: 1rem;
 	}
 
 	.coordinate {
@@ -341,31 +346,25 @@
 		opacity: 1;
 	}
 
-	.edit-btn {
-		position: absolute;
-		bottom: -3rem;
-		left: 0;
-	}
-
 	.edit-icon {
 		width: 1.25rem;
 	}
 
 	@media (min-width: 32rem) {
 		.menu {
-			grid-template-columns: 1fr auto;
+			min-height: 3rem;
+			display: flex;
+			align-items: center;
 			justify-content: space-between;
-			padding-bottom: 1rem;
 		}
 
 		.solution_controls {
-			justify-content: flex-start;
+			padding-bottom: unset;
 			gap: 1rem;
 		}
-		.edit-btn {
-			left: unset;
-			bottom: 0;
-			right: -2.5rem;
+		.secondary_controls {
+			gap: 1rem;
+			margin-left: auto;
 		}
 	}
 </style>
