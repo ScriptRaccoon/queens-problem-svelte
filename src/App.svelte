@@ -16,6 +16,7 @@
 	let total_number: number = 0
 
 	let found_all = false
+	let highlight = false
 	let editing = false
 	let edit_matrix: number[][] = []
 	let show_coords = false
@@ -33,6 +34,10 @@
 			current_index += 1
 		} else if (!found_all) {
 			found_all = true
+			highlight = true
+			setTimeout(() => {
+				highlight = false
+			}, 1000)
 		}
 		total_number = current_index + 1
 	}
@@ -144,7 +149,11 @@
 					/>
 				</button>
 
-				<span class="name" aria-live="polite">
+				<span
+					aria-live="polite"
+					class="solution_counter"
+					class:highlight
+				>
 					Solution {current_index + 1}
 					<span aria-hidden="true">/</span>
 					{#if found_all}
@@ -372,6 +381,15 @@
 
 	.icon {
 		width: 1.25rem;
+	}
+
+	.solution_counter {
+		transition: all 250ms ease-in-out;
+	}
+
+	.highlight {
+		scale: 1.05;
+		color: var(--alert-color);
 	}
 
 	@media (min-width: 32rem) {
