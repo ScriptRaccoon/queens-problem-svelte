@@ -280,6 +280,8 @@
 	}
 
 	.cell {
+		aspect-ratio: 1;
+		overflow: hidden;
 		background-color: var(--cell-color);
 	}
 
