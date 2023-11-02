@@ -4,6 +4,15 @@
 	padding: 0;
 }
 
+:root {
+	--bg-color: #302e2b;
+	--cell-color: #779954;
+	--cell-color-light: #e9edcc;
+	--cell-color-active: #3e3b38;
+	--cell-color-problem: #ff0000;
+	--font-color: #fff;
+}
+
 body {
 	min-height: 100vh;
 	display: flex;
@@ -11,8 +20,8 @@ body {
 	flex-direction: column;
 	align-items: center;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background-color: #11111a;
-	color: white;
+	background-color: var(--bg-color);
+	color: var(--font-color);
 }
 
 button {
@@ -26,7 +35,7 @@ button {
 }
 
 button:focus-visible {
-	outline: 1px solid white;
+	outline: 1px solid var(--font-color);
 }
 
 button[disabled] {
@@ -41,7 +50,7 @@ option {
 }
 
 select:focus-visible {
-	outline: 1px solid white;
+	outline: 1px solid var(--font-color);
 	outline-offset: 0.25rem;
 }
 

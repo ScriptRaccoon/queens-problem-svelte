@@ -271,19 +271,19 @@
 	}
 
 	.cell {
-		background-color: #445;
+		background-color: var(--cell-color);
 	}
 
 	.cell.light {
-		background-color: #779;
+		background-color: var(--cell-color-light);
 	}
 
 	.cell.active {
-		background-color: lime;
+		background-color: var(--cell-color-active);
 	}
 
 	.cell.problem {
-		background-color: red;
+		background-color: var(--cell-color-problem);
 	}
 
 	.queen {
@@ -338,8 +338,12 @@
 
 	.coordinate {
 		opacity: 0;
-		color: black;
+		color: var(--bg-color);
 		font-size: min(2rem, calc(0.4 * var(--unit)));
+	}
+
+	.cell.active .coordinate {
+		color: var(--font-color);
 	}
 
 	.coordinate.visible {
