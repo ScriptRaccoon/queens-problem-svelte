@@ -332,6 +332,7 @@
 	.secondary_controls {
 		display: flex;
 		justify-content: space-between;
+		gap: 1rem;
 	}
 
 	.size_controls {
@@ -340,6 +341,7 @@
 		font-size: 1rem;
 		align-items: center;
 		justify-self: end;
+		margin-left: auto;
 	}
 
 	.size_controls select {
@@ -378,7 +380,6 @@
 			gap: 1rem;
 		}
 		.secondary_controls {
-			gap: 1rem;
 			margin-left: auto;
 		}
 	}
