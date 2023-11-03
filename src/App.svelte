@@ -249,8 +249,13 @@
 <!-- STYLES -->
 
 <style>
-	.board {
+	main {
+		margin-top: 2rem;
 		--size: min(45rem, 90vmin);
+		width: min(45rem, 90vmin);
+		margin-inline: auto;
+	}
+	.board {
 		--unit: calc(var(--size) / var(--n));
 		width: var(--size);
 		height: var(--size);
@@ -295,10 +300,6 @@
 
 	.queen-img {
 		width: 90%;
-	}
-
-	.menu {
-		font-size: 1.5rem;
 	}
 
 	.solution_controls {
@@ -353,11 +354,12 @@
 	}
 
 	.solution_counter {
-		transition: all 250ms ease-in-out;
+		word-break: break-all;
 	}
 
 	@media (min-width: 32rem) {
 		.menu {
+			font-size: 1.5rem;
 			min-height: 3rem;
 			display: flex;
 			align-items: center;
