@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { fly, fade } from 'svelte/transition'
+	import { fly, fade } from "svelte/transition"
 	import {
 		get_solutions,
 		TOTAL_NUMBERS,
 		type solution,
-	} from './solutions'
-	import { DoublyLinkedList } from './DoublyLinkedList'
-	import { get_coord, range, zero_matrix } from './utils'
+	} from "./solutions"
+	import { DoublyLinkedList } from "./DoublyLinkedList"
+	import { get_coord, range, zero_matrix } from "./utils"
 
 	const SIZES = range(4, 20)
 	let n = 8
