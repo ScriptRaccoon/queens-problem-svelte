@@ -2,8 +2,9 @@
 	import { fly, fade } from 'svelte/transition'
 	import { get_solutions, type solution } from './solutions'
 	import { DoublyLinkedList } from './DoublyLinkedList'
+	import { get_coord, range, zero_matrix } from './utils'
 
-	const SIZES = new Array(17).fill(0).map((_, i) => i + 4)
+	const SIZES = range(4, 20)
 	let n = 8
 
 	$: title = `Solutions of the ${n} queens problem`
@@ -18,7 +19,7 @@
 	let found_all = false
 	let highlight = false
 	let editing = false
-	let edit_matrix: number[][] = []
+	let matrix: number[][] = zero_matrix(n)
 	let show_coords = false
 
 	function show_next_solution(): void {
@@ -29,17 +30,16 @@
 		}
 
 		const next_solution = solution_generator.next().value
+
 		if (next_solution) {
 			current_solution = solution_list.add(next_solution)
 			current_index += 1
 		} else if (!found_all) {
 			found_all = true
+			total_number = current_index + 1
 			highlight = true
-			setTimeout(() => {
-				highlight = false
-			}, 1000)
+			setTimeout(() => (highlight = false), 1000)
 		}
-		total_number = current_index + 1
 	}
 
 	function show_previous_solution(): void {
@@ -52,38 +52,25 @@
 
 	function change_size(): void {
 		found_all = false
+		total_number = 0
 		solution_generator = get_solutions(n)
 		solution_list = new DoublyLinkedList()
 		solution_list.add(solution_generator.next().value)
 		current_solution = solution_list.first
 		current_index = 0
-		clear_matrix()
+		matrix = zero_matrix(n)
 	}
 
 	function toggle_edit(): void {
 		editing = !editing
-		if (editing) {
-			clear_matrix()
-		}
-	}
-
-	function clear_matrix(): void {
-		edit_matrix = []
-		for (let i = 0; i < n; i++) {
-			const some_list = []
-			for (let j = 0; j < n; j++) {
-				some_list.push(0)
-			}
-			edit_matrix.push(some_list)
-		}
 	}
 
 	function toggle_cell(row: number, col: number): void {
 		if (!editing) return
-		if (edit_matrix[row][col] > 0) {
-			edit_matrix[row][col] = 0
+		if (matrix[row][col] > 0) {
+			matrix[row][col] = 0
 		} else {
-			edit_matrix[row][col] = 1
+			matrix[row][col] = 1
 		}
 		determine_problems()
 	}
@@ -92,31 +79,30 @@
 		show_coords = !show_coords
 	}
 
-	function determine_problems() {
-		// refactor later
-		for (let row1 = 0; row1 < n; row1++) {
-			for (let col1 = 0; col1 < n; col1++) {
-				if (edit_matrix[row1][col1] == 0) continue
-				let problem = false
-				for (let row2 = 0; row2 < n; row2++) {
-					for (let col2 = 0; col2 < n; col2++) {
-						if (
-							edit_matrix[row2][col2] == 0 ||
-							(row1 == row2 && col1 == col2)
-						)
-							continue
-						if (
-							col1 == col2 ||
-							row1 == row2 ||
-							row1 + col1 == row2 + col2 ||
-							row1 - col1 == row2 - col2
-						) {
-							problem = true
-						}
-					}
+	function is_empty(row: number, col: number): boolean {
+		return matrix[row][col] == 0
+	}
+
+	function determine_problems(): void {
+		for (let i = 0; i < n ** 2; i++) {
+			const [row_1, col_1] = get_coord(i, n)
+			if (is_empty(row_1, col_1)) continue
+			let problem = false
+			for (let j = 0; j < n ** 2; j++) {
+				if (j == i) continue
+				const [row_2, col_2] = get_coord(j, n)
+				if (is_empty(row_2, col_2)) continue
+				const attacking =
+					col_1 == col_2 ||
+					row_1 == row_2 ||
+					row_1 + col_1 == row_2 + col_2 ||
+					row_1 - col_1 == row_2 - col_2
+				if (attacking) {
+					problem = true
+					break
 				}
-				edit_matrix[row1][col1] = problem ? 2 : 1
 			}
+			matrix[row_1][col_1] = problem ? 2 : 1
 		}
 	}
 </script>
@@ -228,7 +214,7 @@
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
 					{#if editing}
-						{@const entry = edit_matrix?.[row]?.[col]}
+						{@const entry = matrix?.[row]?.[col]}
 						<button
 							class="cell"
 							class:light={(row + col) % 2 == 0}
