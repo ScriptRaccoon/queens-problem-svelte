@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition'
-	import { get_solutions, type solution } from './solutions'
+	import {
+		get_solutions,
+		TOTAL_NUMBERS,
+		type solution,
+	} from './solutions'
 	import { DoublyLinkedList } from './DoublyLinkedList'
 	import { get_coord, range, zero_matrix } from './utils'
 
@@ -14,10 +18,7 @@
 	solution_list.add(solution_generator.next().value)
 	let current_solution = solution_list.first
 	let current_index: number = 0
-	let total_number: number = 0
 
-	let found_all = false
-	let highlight = false
 	let editing = false
 	let matrix: number[][] = zero_matrix(n)
 	let show_coords = false
@@ -34,11 +35,6 @@
 		if (next_solution) {
 			current_solution = solution_list.add(next_solution)
 			current_index += 1
-		} else if (!found_all) {
-			found_all = true
-			total_number = current_index + 1
-			highlight = true
-			setTimeout(() => (highlight = false), 1000)
 		}
 	}
 
@@ -51,8 +47,6 @@
 	}
 
 	function change_size(): void {
-		found_all = false
-		total_number = 0
 		solution_generator = get_solutions(n)
 		solution_list = new DoublyLinkedList()
 		solution_list.add(solution_generator.next().value)
@@ -135,24 +129,15 @@
 					/>
 				</button>
 
-				<span
-					aria-live="polite"
-					class="solution_counter"
-					class:highlight
-				>
+				<span aria-live="polite" class="solution_counter">
 					Solution {current_index + 1}
 					<span aria-hidden="true">/</span>
-					{#if found_all}
-						<span class="vh">of</span>
-						{total_number}
-					{:else}
-						?
-					{/if}
+					<span class="vh">of</span>
+					{TOTAL_NUMBERS[n]}
 				</span>
 
 				<button
-					disabled={found_all &&
-						current_index == total_number - 1}
+					disabled={current_index == TOTAL_NUMBERS[n] - 1}
 					on:click={show_next_solution}
 					aria-label="Next solution"
 				>
@@ -369,11 +354,6 @@
 
 	.solution_counter {
 		transition: all 250ms ease-in-out;
-	}
-
-	.highlight {
-		scale: 1.05;
-		color: var(--alert-color);
 	}
 
 	@media (min-width: 32rem) {
