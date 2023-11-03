@@ -271,8 +271,6 @@
 		height: var(--size);
 		display: grid;
 		grid-template: repeat(var(--n), 1fr) / repeat(var(--n), 1fr);
-		gap: 2px;
-		border-radius: 0.5rem;
 		position: relative;
 		margin-top: 0.5rem;
 	}
@@ -282,9 +280,9 @@
 	}
 
 	.square {
-		aspect-ratio: 1;
 		overflow: hidden;
 		background-color: var(--square-color);
+		border: 1px solid var(--bg-color);
 	}
 
 	.square.light {
@@ -357,7 +355,7 @@
 		font-size: min(2rem, calc(0.4 * var(--unit)));
 	}
 
-	.square.active .coordinate {
+	.square:is(.active, .problem) .coordinate {
 		color: var(--font-color);
 	}
 
