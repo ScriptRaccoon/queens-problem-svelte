@@ -6,11 +6,11 @@
 
 :root {
 	--bg-color: #302e2b;
-	--cell-color: #779954;
+	--square-color: #779954;
 	--alert-color: yellow;
-	--cell-color-light: #e9edcc;
-	--cell-color-active: #3e3b38;
-	--cell-color-problem: #ff0000;
+	--square-color-light: #e9edcc;
+	--square-color-active: #3e3b38;
+	--square-color-problem: #ff0000;
 	--font-color: #fff;
 }
 

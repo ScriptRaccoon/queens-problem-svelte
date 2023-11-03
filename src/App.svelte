@@ -65,7 +65,7 @@
 		editing = !editing
 	}
 
-	function toggle_cell(row: number, col: number): void {
+	function toggle_square(row: number, col: number): void {
 		if (!editing) return
 		if (matrix[row][col] > 0) {
 			matrix[row][col] = 0
@@ -210,17 +210,17 @@
 	<!-- BOARD -->
 	{#if current_solution}
 		<div class="board" style:--n={n}>
-			<!-- CELLS -->
+			<!-- SQUARES -->
 			{#each { length: n } as _, row}
 				{#each { length: n } as _, col}
 					{#if editing}
 						{@const entry = matrix?.[row]?.[col]}
 						<button
-							class="cell"
+							class="square"
 							class:light={(row + col) % 2 == 0}
 							class:active={entry == 1}
 							class:problem={entry == 2}
-							on:click={() => toggle_cell(row, col)}
+							on:click={() => toggle_square(row, col)}
 						>
 							<span
 								class="coordinate"
@@ -230,7 +230,7 @@
 						</button>
 					{:else}
 						<div
-							class="cell"
+							class="square"
 							class:light={(row + col) % 2 == 0}
 						/>
 					{/if}
@@ -281,22 +281,22 @@
 		transition: all 400ms ease;
 	}
 
-	.cell {
+	.square {
 		aspect-ratio: 1;
 		overflow: hidden;
-		background-color: var(--cell-color);
+		background-color: var(--square-color);
 	}
 
-	.cell.light {
-		background-color: var(--cell-color-light);
+	.square.light {
+		background-color: var(--square-color-light);
 	}
 
-	.cell.active {
-		background-color: var(--cell-color-active);
+	.square.active {
+		background-color: var(--square-color-active);
 	}
 
-	.cell.problem {
-		background-color: var(--cell-color-problem);
+	.square.problem {
+		background-color: var(--square-color-problem);
 	}
 
 	.queen {
@@ -357,7 +357,7 @@
 		font-size: min(2rem, calc(0.4 * var(--unit)));
 	}
 
-	.cell.active .coordinate {
+	.square.active .coordinate {
 		color: var(--font-color);
 	}
 
