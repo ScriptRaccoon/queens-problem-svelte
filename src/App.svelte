@@ -196,8 +196,8 @@
 	{#if current_solution}
 		<div class="board" style:--n={n}>
 			<!-- SQUARES -->
-			{#each { length: n } as _, row}
-				{#each { length: n } as _, col}
+			{#each range(0, n - 1) as row}
+				{#each range(0, n - 1) as col}
 					{#if editing}
 						{@const entry = matrix?.[row]?.[col]}
 						<button
@@ -225,7 +225,7 @@
 			<!-- QUEENS -->
 			{#if !editing}
 				<div class="absolute" transition:fade>
-					{#each { length: n } as _, row}
+					{#each range(0, n - 1) as row}
 						{@const col = current_solution.data[row]}
 						<div
 							class="queen"
