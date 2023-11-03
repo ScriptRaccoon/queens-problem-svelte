@@ -11,7 +11,7 @@
 	const SIZES = range(4, 20)
 	let n = 8
 
-	$: title = `Solutions of the ${n} queens problem`
+	$: title = `Solutions to the ${n} queens problem`
 
 	let solution_generator = get_solutions(n)
 	let solution_list = new DoublyLinkedList<solution>()
@@ -105,7 +105,7 @@
 	<title>{title}</title>
 </svelte:head>
 
-<header class="vh">
+<header>
 	<h1>{title}</h1>
 </header>
 
@@ -249,12 +249,21 @@
 <!-- STYLES -->
 
 <style>
+	header {
+		padding-block: 2rem;
+	}
+
+	h1 {
+		font-weight: 300;
+		text-align: center;
+	}
+
 	main {
-		margin-top: 2rem;
 		--size: min(45rem, 90vmin);
 		width: min(45rem, 90vmin);
 		margin-inline: auto;
 	}
+
 	.board {
 		--unit: calc(var(--size) / var(--n));
 		width: var(--size);
@@ -332,7 +341,6 @@
 
 	.size_controls select {
 		text-align: center;
-		font-size: 1rem;
 	}
 
 	.coordinate {
@@ -358,6 +366,10 @@
 	}
 
 	@media (min-width: 32rem) {
+		h1 {
+			font-size: 2.25rem;
+		}
+
 		.menu {
 			font-size: 1.5rem;
 			min-height: 3rem;
