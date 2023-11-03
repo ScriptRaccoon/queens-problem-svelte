@@ -74,7 +74,7 @@
 	}
 
 	function is_empty(row: number, col: number): boolean {
-		return matrix[row][col] == 0
+		return matrix[row][col] === 0
 	}
 
 	function determine_problems(): void {
@@ -83,14 +83,14 @@
 			if (is_empty(row_1, col_1)) continue
 			let problem = false
 			for (let j = 0; j < n ** 2; j++) {
-				if (j == i) continue
+				if (j === i) continue
 				const [row_2, col_2] = get_coord(j, n)
 				if (is_empty(row_2, col_2)) continue
 				const attacking =
-					col_1 == col_2 ||
-					row_1 == row_2 ||
-					row_1 + col_1 == row_2 + col_2 ||
-					row_1 - col_1 == row_2 - col_2
+					col_1 === col_2 ||
+					row_1 === row_2 ||
+					row_1 + col_1 === row_2 + col_2 ||
+					row_1 - col_1 === row_2 - col_2
 				if (attacking) {
 					problem = true
 					break
@@ -118,7 +118,7 @@
 				transition:fly={{ x: -100 }}
 			>
 				<button
-					disabled={current_index == 0}
+					disabled={current_index === 0}
 					on:click={show_previous_solution}
 					aria-label="Previous solution"
 				>
@@ -137,7 +137,7 @@
 				</span>
 
 				<button
-					disabled={current_index == TOTAL_NUMBERS[n] - 1}
+					disabled={current_index === TOTAL_NUMBERS[n] - 1}
 					on:click={show_next_solution}
 					aria-label="Next solution"
 				>
@@ -202,9 +202,9 @@
 						{@const entry = matrix?.[row]?.[col]}
 						<button
 							class="square"
-							class:light={(row + col) % 2 == 0}
-							class:active={entry == 1}
-							class:problem={entry == 2}
+							class:light={(row + col) % 2 === 0}
+							class:active={entry === 1}
+							class:problem={entry === 2}
 							on:click={() => toggle_square(row, col)}
 						>
 							<span
@@ -216,7 +216,7 @@
 					{:else}
 						<div
 							class="square"
-							class:light={(row + col) % 2 == 0}
+							class:light={(row + col) % 2 === 0}
 						/>
 					{/if}
 				{/each}
